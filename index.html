@@ -139,12 +139,7 @@
         <span class="badge badge-visitors" title="Total visitors to this site">
           <i data-lucide="users"></i>
           <span class="visitor-badge-label">Visitors</span>
-          <img
-            src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fpdfwatermark.in&count_bg=%23f1f5f9&title_bg=%23f1f5f9&icon=&title=&edge_flat=true&count_text_color=%234f46e5"
-            alt="visitor count"
-            class="visitor-count-img"
-            onerror="this.style.display='none'"
-          />
+          <span class="visitor-count-number" id="visitor-count">...</span>
         </span>
       </div>
     </header>
@@ -630,6 +625,31 @@
   </script>
   <!-- Application JS with cache-busting -->
   <script src="app.js?v=1.0.1"></script>
+
+  <!-- Visitor Counter -->
+  <script>
+    (function () {
+      var el = document.getElementById('visitor-count');
+      if (!el) return;
+
+      // Increment localStorage count immediately (works offline & locally)
+      var localCount = parseInt(localStorage.getItem('pm_visits') || '0', 10) + 1;
+      localStorage.setItem('pm_visits', localCount);
+      el.textContent = localCount.toLocaleString();
+
+      // Try to get real total from countapi.mileshilliard.com (works on live site)
+      fetch('https://countapi.mileshilliard.com/api/v1/hit/pdfwatermark_in_visits', { cache: 'no-store' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && typeof data.value === 'number') {
+            el.textContent = data.value.toLocaleString();
+          }
+        })
+        .catch(function() {
+          // keep the localStorage count already shown
+        });
+    })();
+  </script>
 
 </body>
 </html>
