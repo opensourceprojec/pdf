@@ -33,10 +33,12 @@ const state = {
   imageScale: 50, // percentage (10% - 200%)
   
   // Shared positioning
-  layoutMode: 'single', // 'single' | 'tiled'
+  layoutMode: 'single', // 'single' | 'tiled' | 'free'
   position: 'MC', // TL, TC, TR, ML, MC, MR, BL, BC, BR
   offsetX: 0,
   offsetY: 0,
+  dragPercentX: 50, // percentage for free placement
+  dragPercentY: 50, // percentage for free placement
   opacity: 40, // 0 - 100
   rotation: -45, // -180 - 180
   
@@ -93,6 +95,7 @@ const elements = {
   // Layout Options
   modeSingle: document.getElementById('mode-single'),
   modeTiled: document.getElementById('mode-tiled'),
+  modeFree: document.getElementById('mode-free'),
   positionGridContainer: document.getElementById('position-grid-container'),
   offsetSettings: document.getElementById('offset-settings'),
   inputOffsetX: document.getElementById('wm-offset-x'),
@@ -212,6 +215,80 @@ function setupEventListeners() {
   // Layout Options
   elements.modeSingle.addEventListener('click', () => switchLayoutMode('single'));
   elements.modeTiled.addEventListener('click', () => switchLayoutMode('tiled'));
+  elements.modeFree.addEventListener('click', () => switchLayoutMode('free'));
+  
+  // Drag-and-drop / Free placement event handlers
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let initialLeft = 0;
+  let initialTop = 0;
+
+  function onDragStart(e) {
+    if (state.layoutMode !== 'free') return;
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    isDragging = true;
+    startX = clientX;
+    startY = clientY;
+    
+    const styleLeft = elements.overlayElement.style.left;
+    const styleTop = elements.overlayElement.style.top;
+    
+    const displayWidth = parseFloat(elements.overlayContainer.style.width) || 400;
+    const displayHeight = parseFloat(elements.overlayContainer.style.height) || 500;
+    
+    initialLeft = styleLeft ? parseFloat(styleLeft) : (displayWidth / 2);
+    initialTop = styleTop ? parseFloat(styleTop) : (displayHeight / 2);
+    
+    if (!e.touches) {
+      e.preventDefault();
+    }
+  }
+
+  function onDragMove(e) {
+    if (!isDragging) return;
+    
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    const deltaX = clientX - startX;
+    const deltaY = clientY - startY;
+    
+    const displayWidth = parseFloat(elements.overlayContainer.style.width) || 400;
+    const displayHeight = parseFloat(elements.overlayContainer.style.height) || 500;
+    
+    let newX = initialLeft + deltaX;
+    let newY = initialTop + deltaY;
+    
+    // Constraint to container
+    newX = Math.max(0, Math.min(displayWidth, newX));
+    newY = Math.max(0, Math.min(displayHeight, newY));
+    
+    state.dragPercentX = (newX / displayWidth) * 100;
+    state.dragPercentY = (newY / displayHeight) * 100;
+    
+    elements.overlayElement.style.left = `${newX}px`;
+    elements.overlayElement.style.top = `${newY}px`;
+  }
+
+  function onDragEnd() {
+    isDragging = false;
+  }
+
+  elements.overlayElement.addEventListener('mousedown', onDragStart);
+  document.addEventListener('mousemove', onDragMove);
+  document.addEventListener('mouseup', onDragEnd);
+
+  elements.overlayElement.addEventListener('touchstart', onDragStart, { passive: true });
+  document.addEventListener('touchmove', onDragMove, { passive: false });
+  document.addEventListener('touchend', onDragEnd);
   
   // Position Grid Buttons
   document.querySelectorAll('.pos-cell').forEach(cell => {
@@ -288,18 +365,56 @@ function switchTab(type) {
   syncPreview();
 }
 
-// Switch Layout Modes: Single or Tiled Pattern
+// Calculate pixel coords for single layout based on state grid position and offsets
+function getGridPositionCoords(displayWidth, displayHeight) {
+  const margin = displayWidth * 0.05; // 5% border margin
+  let x = displayWidth / 2;
+  let y = displayHeight / 2;
+  
+  switch (state.position) {
+    case 'TL': x = margin; y = margin; break;
+    case 'TC': x = displayWidth / 2; y = margin; break;
+    case 'TR': x = displayWidth - margin; y = margin; break;
+    case 'ML': x = margin; y = displayHeight / 2; break;
+    case 'MC': x = displayWidth / 2; y = displayHeight / 2; break;
+    case 'MR': x = displayWidth - margin; y = displayHeight / 2; break;
+    case 'BL': x = margin; y = displayHeight - margin; break;
+    case 'BC': x = displayWidth / 2; y = displayHeight - margin; break;
+    case 'BR': x = displayWidth - margin; y = displayHeight - margin; break;
+  }
+  
+  x += state.offsetX;
+  y += state.offsetY;
+  
+  return { x, y };
+}
+
+// Switch Layout Modes: Single or Tiled Pattern or Free Drag
 function switchLayoutMode(mode) {
   state.layoutMode = mode;
   elements.modeSingle.classList.toggle('active', mode === 'single');
   elements.modeTiled.classList.toggle('active', mode === 'tiled');
+  elements.modeFree.classList.toggle('active', mode === 'free');
   
   if (mode === 'tiled') {
     elements.positionGridContainer.classList.add('hidden');
     elements.offsetSettings.classList.add('hidden');
+    elements.overlayElement.classList.remove('draggable');
+  } else if (mode === 'free') {
+    elements.positionGridContainer.classList.add('hidden');
+    elements.offsetSettings.classList.add('hidden');
+    elements.overlayElement.classList.add('draggable');
+    
+    // Maintain visually matching position starting point from grid settings
+    const displayWidth = parseFloat(elements.overlayContainer.style.width) || 400;
+    const displayHeight = parseFloat(elements.overlayContainer.style.height) || 500;
+    const coords = getGridPositionCoords(displayWidth, displayHeight);
+    state.dragPercentX = (coords.x / displayWidth) * 100;
+    state.dragPercentY = (coords.y / displayHeight) * 100;
   } else {
     elements.positionGridContainer.classList.remove('hidden');
     elements.offsetSettings.classList.remove('hidden');
+    elements.overlayElement.classList.remove('draggable');
   }
   
   syncPreview();
@@ -517,30 +632,36 @@ function syncPreview() {
   const displayHeight = parseFloat(elements.overlayContainer.style.height) || 500;
   
   // Handle Single vs Tiled Layout Preview
-  if (state.layoutMode === 'single') {
+  if (state.layoutMode === 'single' || state.layoutMode === 'free') {
     elements.overlayElement.classList.remove('hidden');
     elements.overlayTiled.classList.add('hidden');
     
-    // Calculate baseline coordinate anchor in pixels
-    const margin = displayWidth * 0.05; // 5% border margin
-    let x = displayWidth / 2;
-    let y = displayHeight / 2;
-    
-    switch (state.position) {
-      case 'TL': x = margin; y = margin; break;
-      case 'TC': x = displayWidth / 2; y = margin; break;
-      case 'TR': x = displayWidth - margin; y = margin; break;
-      case 'ML': x = margin; y = displayHeight / 2; break;
-      case 'MC': x = displayWidth / 2; y = displayHeight / 2; break;
-      case 'MR': x = displayWidth - margin; y = displayHeight / 2; break;
-      case 'BL': x = margin; y = displayHeight - margin; break;
-      case 'BC': x = displayWidth / 2; y = displayHeight - margin; break;
-      case 'BR': x = displayWidth - margin; y = displayHeight - margin; break;
+    let x, y;
+    if (state.layoutMode === 'free') {
+      x = (state.dragPercentX / 100) * displayWidth;
+      y = (state.dragPercentY / 100) * displayHeight;
+    } else {
+      // Calculate baseline coordinate anchor in pixels
+      const margin = displayWidth * 0.05; // 5% border margin
+      x = displayWidth / 2;
+      y = displayHeight / 2;
+      
+      switch (state.position) {
+        case 'TL': x = margin; y = margin; break;
+        case 'TC': x = displayWidth / 2; y = margin; break;
+        case 'TR': x = displayWidth - margin; y = margin; break;
+        case 'ML': x = margin; y = displayHeight / 2; break;
+        case 'MC': x = displayWidth / 2; y = displayHeight / 2; break;
+        case 'MR': x = displayWidth - margin; y = displayHeight / 2; break;
+        case 'BL': x = margin; y = displayHeight - margin; break;
+        case 'BC': x = displayWidth / 2; y = displayHeight - margin; break;
+        case 'BR': x = displayWidth - margin; y = displayHeight - margin; break;
+      }
+      
+      // Apply offsets
+      x += state.offsetX;
+      y += state.offsetY;
     }
-    
-    // Apply offsets
-    x += state.offsetX;
-    y += state.offsetY;
     
     elements.overlayElement.style.left = `${x}px`;
     elements.overlayElement.style.top = `${y}px`;
@@ -862,33 +983,40 @@ async function applyWatermarkAndDownload() {
       const page = pagesList[pageIndex];
       const { width, height } = page.getSize();
       
-      if (state.layoutMode === 'single') {
-        // Compute anchor positions in Points
-        const margin = width * 0.05;
-        let tx = width / 2;
-        let ty = height / 2;
+      if (state.layoutMode === 'single' || state.layoutMode === 'free') {
+        let targetX, targetY;
         
-        switch (state.position) {
-          case 'TL': tx = margin; ty = height - margin; break;
-          case 'TC': tx = width / 2; ty = height - margin; break;
-          case 'TR': tx = width - margin; ty = height - margin; break;
-          case 'ML': tx = margin; ty = height / 2; break;
-          case 'MC': tx = width / 2; ty = height / 2; break;
-          case 'MR': tx = width - margin; ty = height / 2; break;
-          case 'BL': tx = margin; ty = margin; break;
-          case 'BC': tx = width / 2; ty = margin; break;
-          case 'BR': tx = width - margin; ty = margin; break;
+        if (state.layoutMode === 'free') {
+          targetX = (state.dragPercentX / 100) * width;
+          targetY = height - (state.dragPercentY / 100) * height;
+        } else {
+          // Compute anchor positions in Points
+          const margin = width * 0.05;
+          let tx = width / 2;
+          let ty = height / 2;
+          
+          switch (state.position) {
+            case 'TL': tx = margin; ty = height - margin; break;
+            case 'TC': tx = width / 2; ty = height - margin; break;
+            case 'TR': tx = width - margin; ty = height - margin; break;
+            case 'ML': tx = margin; ty = height / 2; break;
+            case 'MC': tx = width / 2; ty = height / 2; break;
+            case 'MR': tx = width - margin; ty = height / 2; break;
+            case 'BL': tx = margin; ty = margin; break;
+            case 'BC': tx = width / 2; ty = margin; break;
+            case 'BR': tx = width - margin; ty = margin; break;
+          }
+          
+          // Convert screen coordinates adjustments to PDF scale points
+          // X moves left to right (same in HTML and PDF)
+          const pdfOffsetX = state.offsetX * state.scaleFactor;
+          // Y moves top to bottom in HTML (positive means down),
+          // which matches subtraction in PDF points (since 0 is at the bottom).
+          const pdfOffsetY = state.offsetY * state.scaleFactor;
+          
+          targetX = tx + pdfOffsetX;
+          targetY = ty - pdfOffsetY;
         }
-        
-        // Convert screen coordinates adjustments to PDF scale points
-        // X moves left to right (same in HTML and PDF)
-        const pdfOffsetX = state.offsetX * state.scaleFactor;
-        // Y moves top to bottom in HTML (positive means down),
-        // which matches subtraction in PDF points (since 0 is at the bottom).
-        const pdfOffsetY = state.offsetY * state.scaleFactor;
-        
-        const targetX = tx + pdfOffsetX;
-        const targetY = ty - pdfOffsetY;
         
         if (state.type === 'text') {
           const textW = fontRef.widthOfTextAtSize(state.text, state.fontSize);

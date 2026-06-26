@@ -1,0 +1,8 @@
+# Robots.txt for pdfwatermark.in
+# Permits all search engine indexers and AI scrapers/bots to read and index the site content
+
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://pdfwatermark.in/sitemap.xml
