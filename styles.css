@@ -233,9 +233,24 @@ body {
   border-color: rgba(16, 185, 129, 0.2);
 }
 
-.badge-version {
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--text-muted);
+.badge-pdf-snap {
+  background: linear-gradient(135deg, #059669 0%, #0891b2 100%);
+  color: #fff;
+  border-color: transparent;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.45rem 1rem;
+  gap: 0.4rem;
+  text-decoration: none;
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.18), 0 4px 16px rgba(8, 145, 178, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.badge-pdf-snap:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.25), 0 6px 20px rgba(8, 145, 178, 0.45);
+  color: #fff;
 }
 
 /* === Visitor Counter Badge in Header === */

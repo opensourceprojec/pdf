@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
+
+<head>
+  <!-- ═══════════════════════════════════════════════════════════════
+       CORE META — SEO FOUNDATION
+  ═══════════════════════════════════════════════════════════════ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Primary Title & Description -->
+  <title>PDF Snap — Convert Any PDF Page to High-Res PNG Online, Free & Instant</title>
+  <meta name="description"
+    content="Extract and download any page from a PDF as a high-resolution PNG image instantly. 100% free, client-side, no file upload required. Works on all devices — desktop, tablet, and mobile.">
+  <meta name="keywords"
+    content="pdf snap, pdf to png, convert pdf page to image, extract pdf page, pdf page to png, pdf image extractor, pdf converter online, free pdf tool, pdf to image download, high resolution pdf export, pdf page screenshot, online pdf tool no upload">
+
+  <!-- Authorship & Publisher -->
+  <meta name="author" content="PageSnap PDF">
+  <meta name="publisher" content="PageSnap PDF">
+  <meta name="copyright" content="© 2026 PageSnap PDF">
+  <meta name="application-name" content="PageSnap PDF">
+
+  <!-- Robots & Crawling -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://pdfwatermark.in/pdf-snap.html">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PageSnap PDF">
+  <meta property="og:title" content="PDF Snap — Convert Any PDF Page to High-Res PNG Instantly">
+  <meta property="og:description"
+    content="Extract and download any single page from any PDF as a crisp PNG image. Free, private, no signup — works entirely in your browser.">
+  <meta property="og:url" content="https://pdfwatermark.in/pdf-snap.html">
+  <meta property="og:image" content="https://pdfwatermark.in/og-image.png">
+
+  <!-- Performance & Security -->
+  <meta name="theme-color" content="#7c3aed" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: dark)">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="pdf-snap.css">
+
+  <!-- Structured Data / JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDF Snap",
+    "url": "https://pdfwatermark.in/pdf-snap.html",
+    "description": "A free, browser-based tool that converts any single page of a PDF document into a high-resolution PNG image. No file upload, no server, no sign-up required.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": ["Windows", "macOS", "Linux", "Android", "iOS"],
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+
+<body>
+
+  <!-- ── ANIMATED BACKGROUND ─────────────────────────── -->
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
+
+  <div class="app-container">
+
+    <!-- ── HEADER ───────────────────────────────────────── -->
+    <header class="app-header" role="banner">
+
+      <div class="header-badges">
+        <a href="index.html" class="badge badge-watermark" title="Back to PDF Watermark Tool">
+          <i data-lucide="droplet"></i> PDF Watermark
+        </a>
+        <span class="badge badge-pdf-snap active" title="Convert PDF page to PNG image">
+          <i data-lucide="camera"></i> PDF Snap
+        </span>
+        <span class="badge badge-secure">
+          <i data-lucide="shield-check"></i> 100% Client-Side
+        </span>
+        <span class="badge badge-visitors" title="Total visitors to this site">
+          <i data-lucide="users"></i>
+          <span class="visitor-badge-label">Visitors</span>
+          <span class="visitor-count-number" id="visitor-count">...</span>
+        </span>
+      </div>
+
+      <div class="logo">
+        <i data-lucide="file-image" class="logo-icon" aria-hidden="true"></i>
+        <h1>PageSnap <span>PDF</span></h1>
+      </div>
+      <p class="subtitle" id="app-description">
+        Upload any PDF, pick a page number, and download it as a crisp high-resolution PNG image — instantly, right in
+        your browser. Free, private, no sign-up.
+      </p>
+    </header>
+
+    <!-- ── MAIN TOOL ─────────────────────────────────────── -->
+    <main class="app-card" role="main" id="main-tool" aria-label="PDF to PNG converter tool">
+
+      <!-- STEP 1: Upload -->
+      <section class="upload-section" id="uploadSection" aria-label="PDF upload area">
+        <div class="drop-zone" id="dropZone" role="button" tabindex="0"
+          aria-label="Upload PDF file — click or drag and drop">
+          <input type="file" id="fileInput" accept=".pdf" class="file-input" aria-label="Select PDF file">
+          <div class="drop-zone-content" aria-hidden="true">
+            <div class="icon-ring">
+              <div class="icon-wrapper">
+                <i data-lucide="upload-cloud" class="upload-icon"></i>
+              </div>
+            </div>
+            <h2
+              style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:700;color:var(--text-1);margin-bottom:0.5rem;">
+              Drop your PDF here</h2>
+            <p class="file-type-hint">or click anywhere in this box to browse</p>
+            <div class="upload-tags">
+              <span class="tag tag-violet">PDF</span>
+              <span class="tag tag-cyan">High-Res PNG</span>
+              <span class="tag tag-pink">Client-Side</span>
+            </div>
+            <p class="security-badge">
+              <i data-lucide="shield-check"></i>
+              Your files are never uploaded to any server
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 2: Converter -->
+      <section class="converter-section hidden" id="converterSection" aria-label="PDF page converter">
+        <div class="workspace-layout">
+
+          <!-- LEFT: Controls -->
+          <div class="panel-left">
+
+            <div class="card-inner file-info-card" role="region" aria-label="File information">
+              <div class="file-details">
+                <div class="file-icon-wrap" aria-hidden="true">
+                  <i data-lucide="file-text" class="detail-file-icon"></i>
+                </div>
+                <div class="file-meta">
+                  <h3 id="fileName" class="file-name">document.pdf</h3>
+                  <span id="fileSize" class="file-size">0.0 MB</span>
+                </div>
+                <button class="btn-icon-danger" id="removeFileBtn" title="Close PDF"
+                  aria-label="Remove PDF and start over">
+                  <i data-lucide="x" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="page-count-badge" aria-live="polite">
+                <i data-lucide="layers" aria-hidden="true"></i>
+                <span id="pageCountText">0 pages</span>
+              </div>
+            </div>
+
+            <div class="card-inner controls-card" role="region" aria-label="Page selection controls">
+              <label for="pageInput" class="control-label">Target Page Number</label>
+              <div class="page-selector-wrapper" role="group" aria-label="Page navigation">
+                <button class="btn-step" id="prevPageBtn" disabled aria-label="Previous page">
+                  <i data-lucide="chevron-left" aria-hidden="true"></i>
+                </button>
+                <div class="input-container">
+                  <input type="number" id="pageInput" min="1" value="1" class="page-input"
+                    aria-label="Current page number">
+                  <span class="max-page-indicator" aria-label="of">/ <span id="maxPagesText">1</span></span>
+                </div>
+                <button class="btn-step" id="nextPageBtn" disabled aria-label="Next page">
+                  <i data-lucide="chevron-right" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="range-slider-container">
+                <input type="range" id="pageSlider" min="1" max="1" value="1" class="page-slider"
+                  aria-label="Page slider">
+              </div>
+              <div class="action-buttons">
+                <button class="btn-primary" id="downloadBtn" aria-label="Download current page as PNG">
+                  <i data-lucide="download" aria-hidden="true"></i>
+                  <span>Download Page <span id="btnPageNum">1</span> as PNG</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-inner features-card" role="region" aria-label="Export settings">
+              <h3 class="features-card-title"
+                style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;background:linear-gradient(90deg,#db2777,#ea580c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+                <i data-lucide="sliders-horizontal" style="width:14px;height:14px;color:#ea580c;"></i>
+                Export Settings
+              </h3>
+              <div class="settings-row">
+                <label for="resolutionSelect" class="setting-label">Resolution</label>
+                <select id="resolutionSelect" class="settings-select" aria-label="Select export resolution">
+                  <option value="1">Normal (72 DPI)</option>
+                  <option value="2" selected>High (150 DPI)</option>
+                  <option value="3">Ultra (300 DPI)</option>
+                  <option value="4">Max (400 DPI)</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: Preview -->
+          <div class="panel-right">
+            <div class="preview-header">
+              <span class="preview-title"><i data-lucide="eye" aria-hidden="true"></i> Page Preview</span>
+              <span class="preview-resolution" id="dimensionsText" aria-live="polite">— × — px</span>
+            </div>
+
+            <div class="preview-container" id="previewContainer" role="img" aria-label="PDF page preview">
+              <div class="preview-spinner hidden" id="previewSpinner" role="status" aria-label="Rendering page">
+                <div class="spinner-ring" aria-hidden="true"></div>
+                <p>Rendering page…</p>
+              </div>
+              <div class="preview-empty" id="previewEmpty" aria-label="No preview yet">
+                <div class="preview-empty-icon" aria-hidden="true">
+                  <i data-lucide="image"></i>
+                </div>
+                <p>Preview will appear here</p>
+              </div>
+              <div class="preview-wrapper hidden" id="previewWrapper">
+                <canvas id="previewCanvas" aria-label="Rendered PDF page"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <!-- SEO / GEO Content Section -->
+    <section class="seo-content" id="about-section" aria-label="About PageSnap PDF">
+      <div class="seo-grid">
+
+        <div class="seo-card">
+          <div class="seo-card-icon" aria-hidden="true"><i data-lucide="shield-check"></i></div>
+          <h2>100% Private & Secure</h2>
+          <p id="faq-answer-3">Your PDF files are <strong>never uploaded to any server</strong>. All processing happens
+            locally inside your browser using PDF.js. Your documents never leave your device.</p>
+        </div>
+
+        <div class="seo-card">
+          <div class="seo-card-icon" aria-hidden="true"><i data-lucide="zap"></i></div>
+          <h2>Instant Conversion</h2>
+          <p>Extract any page from a PDF as a PNG image in under a second. No waiting for server processing, no queue,
+            no compression — just instant, high-quality output.</p>
+        </div>
+
+        <div class="seo-card">
+          <div class="seo-card-icon" aria-hidden="true"><i data-lucide="monitor-smartphone"></i></div>
+          <h2>Works on Every Device</h2>
+          <p>PageSnap PDF works on Windows, macOS, Linux, Android, and iOS. Compatible with Chrome, Firefox, Safari, and
+            Edge — no app download required.</p>
+        </div>
+
+      </div>
+
+      <div class="seo-howto" aria-labelledby="howto-heading">
+        <h2 id="howto-heading">How to Convert a PDF Page to PNG — 4 Simple Steps</h2>
+        <ol class="howto-steps">
+          <li><strong>Upload your PDF</strong> — Click or drag-and-drop your PDF file into the tool above.</li>
+          <li><strong>Select the page</strong> — Enter the page number or use the slider to navigate to any page.</li>
+          <li><strong>Choose resolution</strong> — Pick from Normal (72 DPI), High (150 DPI), Ultra (300 DPI), or Max
+            (400 DPI).</li>
+          <li><strong>Download as PNG</strong> — Click the download button and your PNG image saves instantly to your
+            device.</li>
+        </ol>
+      </div>
+
+      <div class="seo-faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading">Frequently Asked Questions</h2>
+
+        <details class="faq-item">
+          <summary>Is PDF Snap free to use?</summary>
+          <p id="faq-answer-1">Yes, PDF Snap is completely free with no account, no registration, and no usage
+            limits.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>How do I convert a PDF page to a PNG image?</summary>
+          <p id="faq-answer-2">Upload your PDF, enter the page number you want, then click "Download Page as PNG". The
+            image saves directly to your device.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Is my PDF uploaded to a server?</summary>
+          <p>No. Your PDF never leaves your device. All conversion happens entirely inside your browser — there is no
+            server involved.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>What resolution PNG can I export?</summary>
+          <p>You can export at Normal (72 DPI), High (150 DPI), Ultra (300 DPI), or Max (400 DPI). For print-quality
+            images, choose Ultra or Max.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Does it work with password-protected PDFs?</summary>
+          <p>Currently, password-protected PDFs are not supported. The tool works with standard, unencrypted PDF files.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ─────────────────────────────────────────── -->
+    <footer class="app-footer" role="contentinfo">
+      <p><b>PDF Snap runs entirely in your browser. Designed and Developed by MHD</b></p>
+    </footer>
+
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="pdf-snap.js"></script>
+
+  <!-- Visitor Counter -->
+  <script>
+    (function () {
+      var el = document.getElementById('visitor-count');
+      if (!el) return;
+
+      var localCount = parseInt(localStorage.getItem('pm_visits') || '0', 10) + 1;
+      localStorage.setItem('pm_visits', localCount);
+      el.textContent = localCount.toLocaleString();
+
+      fetch('https://countapi.mileshilliard.com/api/v1/hit/pdfwatermark_in_visits', { cache: 'no-store' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && typeof data.value === 'number') {
+            el.textContent = data.value.toLocaleString();
+          }
+        })
+        .catch(function() {});
+    })();
+  </script>
+</body>
+
+</html>
