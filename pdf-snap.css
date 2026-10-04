@@ -1037,3 +1037,42 @@ body::after {
   .toast-container { bottom: 1rem; right: 1rem; left: 1rem; }
   .toast { min-width: unset; max-width: 100%; }
 }
+
+.mobile-watermark-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-watermark-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-lg);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    transition: transform 0.2s ease;
+    width: 100%;
+  }
+
+  .mobile-watermark-btn:active {
+    transform: scale(0.98);
+  }
+
+  .mobile-snap-btn-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mobile-watermark-btn i {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+}
